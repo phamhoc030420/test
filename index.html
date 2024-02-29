@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telex</title>
+</head>
+<body>
+    <h2>Nhập chuỗi chữ cái Latin:</h2>
+    <input type="text" id="input" placeholder="Nhập chuỗi..." style="display: block;">
+    <br />
+    <button onclick="countVietnameseChars()">Output</button>
+    <p id="result"></p>
+    <script>
+        //check input
+        function isValidInput(inputString) {
+            if (!inputString || inputString.trim() === '') {
+                return false;
+            }
+            for (let i = 0; i < inputString.length; i++) {
+                const char = inputString[i];
+                // Kiểm tra xem ký tự có phải là ký tự chữ cái không
+                if (!(/[a-zA-Z]/).test(char)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        function countVietnameseChars() {
+            const inputString = document.getElementById('input').value;
+            if(!isValidInput(inputString)){
+                alert('Input is not valid')
+                document.getElementById('input').value=''
+                document.getElementById('result').innerText=''
+                return;
+            }
+            const vietnameseChars = ['aw', 'aa', 'dd', 'ee', 'oo', 'ow', 'uw'];
+            let count = 0;
+            let arr=[];
+            for (let i = 0; i < inputString.length ; i++) {
+                const char = inputString.slice(i, i + 2);
+                if (vietnameseChars.includes(char)) {
+                    count++;
+                    arr.push(char);
+                    i++;
+                }
+                // hai chữ w liên tiếp
+                else if(char[0]==='w' && char[1]==='w'){
+                    count+=2;
+                    arr.push(char[0]);
+                    arr.push(char[1]);
+                    i++;
+                }
+                // xét đứng trước chữ w không phải là ['a','o','u']
+                else if(char[1]==='w'&& char[0]!=='a' && char[0]!=='o' && char[0]!=='u'&& char[0]!=='w'){
+                    count++;
+                    arr.push(char[1])
+                    i++;
+                }
+                // kí tự đầu tiên là 'w' và kí tự thứ hai là bất kì khác 'w' vì đã có trường hợp trên
+                else if(char[0]==='w'&& char[1]!=='w'){
+                    count++;
+                    arr.push(char[0])
+                }
+            }
+
+            document.getElementById('result').innerText = `Số lượng chữ cái Tiếng Việt: ${count} (${arr})`;
+        }
+    </script>
+</body>
+</html>
